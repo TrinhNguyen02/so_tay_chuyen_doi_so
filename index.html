@@ -1,95 +1,171 @@
 <!DOCTYPE html>
+
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flipbook</title>
+<title>Flipbook PDF</title>
+
+<link rel="icon" href="data:,">
 
 <style>
+
 body{
 margin:0;
-background:#1a1a1a;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+background:#111;
+font-family:sans-serif;
+overflow:hidden;
+}
+
+#toolbar{
+position:fixed;
+top:10px;
+right:10px;
+z-index:1000;
+}
+
+#toolbar button{
+padding:8px 12px;
+margin:3px;
+font-size:16px;
+cursor:pointer;
+border:none;
+border-radius:4px;
+background:#ffffff;
 }
 
 #flipbook{
-width:900px;
-height:600px;
-}
-.page{
-background:white;
+width:100vw;
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
 }
+
 canvas{
-width:100%;
-height:100%;
+margin:2px;
+background:white;
+box-shadow:0 0 10px rgba(0,0,0,0.4);
 }
+
 </style>
 
 </head>
 
 <body>
 
-<div id="flipbook"></div>
+<div id="toolbar">
+<button onclick="prevPage()">◀</button>
+<button onclick="nextPage()">▶</button>
+<button onclick="zoomOut()">－</button>
+<button onclick="zoomIn()">＋</button>
+<button onclick="downloadPDF()">⬇</button>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
+<div id="flipbook">
+<canvas id="page1"></canvas>
+<canvas id="page2"></canvas>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <script>
 
-const url = "so_tay_ver1.2.pdf";
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
-const container = document.getElementById("flipbook");
+let pdfDoc=null;
+let currentPage=1;
+let scale=1.2;
 
-const pageFlip = new St.PageFlip(container,{
-width:450,
-height:600,
-showCover:true
+const canvas1=document.getElementById("page1");
+const canvas2=document.getElementById("page2");
+
+const ctx1=canvas1.getContext("2d");
+const ctx2=canvas2.getContext("2d");
+
+pdfjsLib.getDocument("so_tay_ver1.2.pdf").promise.then(function(pdf){
+
+pdfDoc=pdf;
+
+renderPages();
+
 });
 
-pdfjsLib.getDocument(url).promise.then(pdf=>{
+function renderPages(){
 
-let pages=[];
+renderPage(currentPage,canvas1,ctx1);
 
-for(let i=1;i<=pdf.numPages;i++){
+if(currentPage+1<=pdfDoc.numPages)
+renderPage(currentPage+1,canvas2,ctx2);
 
-pdf.getPage(i).then(page=>{
+}
 
-const viewport = page.getViewport({scale:1.5});
+function renderPage(num,canvas,ctx){
 
-const canvas = document.createElement("canvas");
-const context = canvas.getContext("2d");
+pdfDoc.getPage(num).then(function(page){
 
-canvas.width = viewport.width;
-canvas.height = viewport.height;
+let viewport=page.getViewport({scale:scale});
+
+canvas.height=viewport.height;
+canvas.width=viewport.width;
 
 page.render({
-canvasContext:context,
+canvasContext:ctx,
 viewport:viewport
 });
 
-const div=document.createElement("div");
-div.className="page";
-div.appendChild(canvas);
-
-container.appendChild(div);
-
-pages.push(div);
-
-if(pages.length===pdf.numPages){
-pageFlip.loadFromHTML(pages);
-}
-
 });
 
 }
 
-});
+function nextPage(){
+
+if(currentPage+2<=pdfDoc.numPages){
+
+currentPage+=2;
+
+renderPages();
+
+}
+
+}
+
+function prevPage(){
+
+if(currentPage-2>=1){
+
+currentPage-=2;
+
+renderPages();
+
+}
+
+}
+
+function zoomIn(){
+
+scale+=0.2;
+
+renderPages();
+
+}
+
+function zoomOut(){
+
+scale-=0.2;
+
+if(scale<0.5) scale=0.5;
+
+renderPages();
+
+}
+
+function downloadPDF(){
+
+window.open("so_tay_ver1.2.pdf");
+
+}
 
 </script>
 
