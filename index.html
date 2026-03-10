@@ -70,7 +70,7 @@ font-size:14px;
 
 #flipbook{
 width:95vw;
-max-width:1400px;
+max-width:1500px;
 height:85vh;
 margin-top:80px;
 }
@@ -130,16 +130,31 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 
 const url="so_tay_ver1.2.pdf";
 
-/* ===== Flipbook ===== */
+/* ===== Container ===== */
 
 const container=document.getElementById("flipbook");
+
+/* ===== Detect mobile ===== */
+
+const isMobile = window.innerWidth < 768;
+
+/* ===== Flipbook ===== */
 
 const pageFlip=new St.PageFlip(container,{
 width:500,
 height:700,
+
 size:"stretch",
+
 showCover:true,
-mobileScrollSupport:true
+
+mobileScrollSupport:true,
+
+usePortrait:true,
+
+swipeDistance:30,
+
+autoSize:true
 });
 
 /* ===== Buttons ===== */
@@ -183,7 +198,6 @@ viewport:viewport
 });
 
 const div=document.createElement("div");
-
 div.className="page";
 
 div.appendChild(canvas);
@@ -193,11 +207,33 @@ container.appendChild(div);
 pages.push(div);
 
 if(pages.length===pdf.numPages){
+
 pageFlip.loadFromHTML(pages);
+
+/* ===== Mobile single page ===== */
+
+if(isMobile){
+pageFlip.updateOrientation("portrait");
+}else{
+pageFlip.updateOrientation("landscape");
+}
+
 }
 
 });
 
+}
+
+});
+
+/* ===== Responsive orientation ===== */
+
+window.addEventListener("resize",()=>{
+
+if(window.innerWidth < 768){
+pageFlip.updateOrientation("portrait");
+}else{
+pageFlip.updateOrientation("landscape");
 }
 
 });
