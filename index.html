@@ -1,58 +1,55 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sổ Tay Chuyển Đổi Số - 3D Flipbook</title>
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip@1.0.9/css/dflip.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip@1.0.9/css/themify-icons.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flipbook</title>
 
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            background-color: #1a1a1a; /* Nền tối tối giản */
-            overflow: hidden;
-        }
-        #df-book-wrapper {
-            height: 100vh;
-            width: 100%;
-        }
-    </style>
+<style>
+body{
+margin:0;
+background:#1a1a1a;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+#flipbook{
+width:90vw;
+max-width:900px;
+height:90vh;
+}
+</style>
+
 </head>
+
 <body>
 
-    <div id="df-book-wrapper"></div>
+<div id="flipbook"></div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/dflip@1.0.9/js/dflip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
 
-    <script>
-        jQuery(document).ready(function () {
-            // QUAN TRỌNG: Kiểm tra tên file PDF của bạn trên GitHub
-            // Nếu file trên GitHub là 'sach.pdf' thì đổi 'book.pdf' thành 'sach.pdf'
-            var pdfUrl = "so_tay_ver1.2.pdf"; 
+<script>
 
-            var options = {
-                webgl: true,              // Bật hiệu ứng 3D
-                hard: "cover",            // Bìa cứng
-                duration: 800,            // Tốc độ lật (ms)
-                backgroundColor: "#1a1a1a",
-                enableDownload: true,     // Cho phép người xem tải về
-                enableAnnotation: false,
-                soundEnable: true         // Có tiếng lật trang
-            };
+const pageFlip = new St.PageFlip(
+document.getElementById("flipbook"),
+{
+width:550,
+height:733,
+size:"stretch",
+minWidth:315,
+maxWidth:1000,
+minHeight:400,
+maxHeight:1533,
+showCover:true,
+mobileScrollSupport:true
+}
+);
 
-            // Khởi tạo sách
-            if (jQuery("#df-book-wrapper").flipBook) {
-                jQuery("#df-book-wrapper").flipBook(pdfUrl, options);
-            } else {
-                console.error("Thư viện DearFlip chưa được tải thành công.");
-            }
-        });
-    </script>
+pageFlip.loadFromPDF("so_tay_ver1.2.pdf");
+
+</script>
+
 </body>
 </html>
