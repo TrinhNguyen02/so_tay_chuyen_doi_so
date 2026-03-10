@@ -1,47 +1,58 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sổ tay chuyển đổi số</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sổ Tay Chuyển Đổi Số - 3D Flipbook</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip@1.0.9/css/dflip.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip@1.0.9/css/themify-icons.min.css">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip/dist/dflip.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip/dist/themify-icons.min.css">
-
-<style>
-body{
-margin:0;
-background:#1a1a1a;
-}
-
-#my-flipbook{
-width:100%;
-height:100vh;
-}
-</style>
-
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #1a1a1a; /* Nền tối tối giản */
+            overflow: hidden;
+        }
+        #df-book-wrapper {
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
 </head>
-
 <body>
 
-<div id="my-flipbook" class="df-book"></div>
+    <div id="df-book-wrapper"></div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/dflip/dist/dflip.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/dflip@1.0.9/js/dflip.min.js"></script>
 
-<script>
+    <script>
+        jQuery(document).ready(function () {
+            // QUAN TRỌNG: Kiểm tra tên file PDF của bạn trên GitHub
+            // Nếu file trên GitHub là 'sach.pdf' thì đổi 'book.pdf' thành 'sach.pdf'
+            var pdfUrl = "so_tay_ver1.2.pdf"; 
 
-$(document).ready(function(){
+            var options = {
+                webgl: true,              // Bật hiệu ứng 3D
+                hard: "cover",            // Bìa cứng
+                duration: 800,            // Tốc độ lật (ms)
+                backgroundColor: "#1a1a1a",
+                enableDownload: true,     // Cho phép người xem tải về
+                enableAnnotation: false,
+                soundEnable: true         // Có tiếng lật trang
+            };
 
-$("#my-flipbook").flipBook({
-pdf:"so_tay_ver1.2.pdf",
-webgl:true,
-backgroundColor:"#1a1a1a"
-});
-
-});
-
-</script>
-
+            // Khởi tạo sách
+            if (jQuery("#df-book-wrapper").flipBook) {
+                jQuery("#df-book-wrapper").flipBook(pdfUrl, options);
+            } else {
+                console.error("Thư viện DearFlip chưa được tải thành công.");
+            }
+        });
+    </script>
 </body>
 </html>
