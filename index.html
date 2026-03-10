@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Flipbook</title>
+<title>Sổ tay chuyển đổi số</title>
 
 <link rel="icon" href="data:,">
 
@@ -12,28 +13,66 @@
 
 body{
 margin:0;
-background:#1a1a1a;
+background:#0f1115;
+font-family:system-ui;
 display:flex;
 flex-direction:column;
 align-items:center;
 height:100vh;
 }
 
+/* ===== Toolbar ===== */
+
 #toolbar{
-margin:10px;
+position:fixed;
+top:20px;
+display:flex;
+gap:10px;
+background:rgba(30,30,35,0.85);
+padding:10px 14px;
+border-radius:12px;
+backdrop-filter:blur(10px);
+box-shadow:0 5px 20px rgba(0,0,0,0.4);
+z-index:10;
 }
 
 button{
-padding:8px 15px;
-margin:5px;
-font-size:16px;
+border:none;
+padding:10px 18px;
+font-size:15px;
+border-radius:8px;
 cursor:pointer;
+background:#2563eb;
+color:white;
+transition:all .2s;
 }
 
+button:hover{
+background:#1d4ed8;
+transform:translateY(-2px);
+}
+
+.download{
+background:#16a34a;
+}
+
+.download:hover{
+background:#15803d;
+}
+
+#pageNum{
+color:white;
+padding:10px;
+font-size:14px;
+}
+
+/* ===== Flipbook ===== */
+
 #flipbook{
-width:900px;
-height:600px;
-max-width:95vw;
+width:95vw;
+max-width:1400px;
+height:85vh;
+margin-top:80px;
 }
 
 .page{
@@ -49,23 +88,32 @@ height:100%;
 }
 
 </style>
+
 </head>
 
 <body>
 
+<!-- ===== Toolbar ===== -->
+
 <div id="toolbar">
 
-<button onclick="prevPage()">◀ Back</button>
+<button onclick="prevPage()">◀</button>
 
-<button onclick="nextPage()">Next ▶</button>
+<button onclick="nextPage()">▶</button>
 
 <a href="so_tay_ver1.2.pdf" download>
-<button>⬇ Download PDF</button>
+<button class="download">⬇ Download</button>
 </a>
+
+<span id="pageNum"></span>
 
 </div>
 
+<!-- ===== Flipbook ===== -->
+
 <div id="flipbook"></div>
+
+<!-- ===== Libraries ===== -->
 
 <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
 
@@ -73,19 +121,28 @@ height:100%;
 
 <script>
 
-const url="so_tay_ver1.2.pdf";
+/* ===== Fix PDF worker error ===== */
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
 "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
+/* ===== PDF file ===== */
+
+const url="so_tay_ver1.2.pdf";
+
+/* ===== Flipbook ===== */
+
 const container=document.getElementById("flipbook");
 
 const pageFlip=new St.PageFlip(container,{
-width:450,
-height:600,
+width:500,
+height:700,
+size:"stretch",
 showCover:true,
 mobileScrollSupport:true
 });
+
+/* ===== Buttons ===== */
 
 function nextPage(){
 pageFlip.flipNext();
@@ -95,6 +152,15 @@ function prevPage(){
 pageFlip.flipPrev();
 }
 
+/* ===== Page counter ===== */
+
+pageFlip.on("flip",(e)=>{
+document.getElementById("pageNum").innerText =
+(e.data + 1) + " / " + pageFlip.getPageCount();
+});
+
+/* ===== Load PDF ===== */
+
 pdfjsLib.getDocument(url).promise.then(pdf=>{
 
 let pages=[];
@@ -103,7 +169,7 @@ for(let i=1;i<=pdf.numPages;i++){
 
 pdf.getPage(i).then(page=>{
 
-const viewport=page.getViewport({scale:1.5});
+const viewport=page.getViewport({scale:2});
 
 const canvas=document.createElement("canvas");
 const context=canvas.getContext("2d");
@@ -117,6 +183,7 @@ viewport:viewport
 });
 
 const div=document.createElement("div");
+
 div.className="page";
 
 div.appendChild(canvas);
