@@ -1,43 +1,46 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sổ Tay Chuyển Đổi Số</title>
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip@1.0.9/css/dflip.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip@1.0.9/css/themify-icons.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sách Lật Trang 3D</title>
 
-    <style>
-        body { margin: 0; padding: 0; background-color: #1a1a1a; overflow: hidden; }
-        #flipbook-container { height: 100vh; width: 100vw; }
-    </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip@1.0.9/css/dflip.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip@1.0.9/css/themify-icons.min.css">
+
+<style>
+body{
+    margin:0;
+    background:#1a1a1a;
+}
+#my-flipbook{
+    width:100%;
+    height:100vh;
+}
+</style>
 </head>
+
 <body>
 
-    <div id="flipbook-container"></div>
+<div id="my-flipbook" class="df-book"></div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/dflip@1.0.9/js/dflip.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dflip@1.0.9/js/dflip.min.js"></script>
 
-    <script>
-        // 4. Đợi tất cả thư viện sẵn sàng mới chạy lệnh flipBook
-        jQuery(window).on('load', function () {
-            // KIỂM TRA: Tên file PDF của bạn trên GitHub phải là book.pdf (viết thường)
-            var pdfUrl = "so_tay_ver1.2.pdf"; 
-            
-            if (jQuery("#flipbook-container").flipBook) {
-                jQuery("#flipbook-container").flipBook(pdfUrl, {
-                    webgl: true,
-                    hard: "cover",
-                    duration: 800,
-                    backgroundColor: "#1a1a1a"
-                });
-            } else {
-                console.error("Lỗi: Thư viện DearFlip chưa được tải đúng cách!");
-            }
-        });
-    </script>
+<script>
+
+$(document).ready(function(){
+
+$("#my-flipbook").flipBook({
+    pdf: "so_tay_ver1.2.pdf",
+    webgl: true,
+    hard: "cover",
+    backgroundColor:"#1a1a1a"
+});
+
+});
+
+</script>
+
 </body>
 </html>
