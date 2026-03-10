@@ -1,175 +1,273 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
+  <head>
+    <!-- Meta -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sổ tay chuyển đổi số</title>
 
-<title>Flipbook</title>
+    <link rel="icon" href="data:," />
 
-<link rel="icon" href="data:,">
+    <!-- ================= CSS ================= -->
+    <style>
+      /* ===== Global ===== */
 
-<style>
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto;
+        background: linear-gradient(135deg, #0f1115, #1a1d24);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+      }
 
-body{
-margin:0;
-background:#0f1115;
-font-family:system-ui;
-display:flex;
-flex-direction:column;
-align-items:center;
-height:100vh;
-}
+      /* ===== Toolbar ===== */
 
-#toolbar{
-position:fixed;
-top:20px;
-display:flex;
-gap:10px;
-background:rgba(30,30,35,0.9);
-padding:10px 14px;
-border-radius:12px;
-backdrop-filter:blur(10px);
-z-index:10;
-}
+      #toolbar {
+        position: fixed;
+        top: 18px;
 
-button{
-border:none;
-padding:10px 18px;
-font-size:15px;
-border-radius:8px;
-cursor:pointer;
-background:#2563eb;
-color:white;
-}
+        display: flex;
+        align-items: center;
+        gap: 10px;
 
-.download{
-background:#16a34a;
-}
+        background: rgba(30, 30, 35, 0.85);
+        padding: 10px 16px;
 
-#flipbook{
-width:90vw;
-max-width:1000px;
-height:90vh;
-margin-top:80px;
-}
+        border-radius: 14px;
+        backdrop-filter: blur(12px);
 
-.page{
-background:white;
-display:flex;
-justify-content:center;
-align-items:center;
-}
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
 
-canvas{
-width:100%;
-height:100%;
-}
+        z-index: 10;
+      }
 
-</style>
+      /* ===== Buttons ===== */
 
-</head>
+      button {
+        border: none;
 
-<body>
+        padding: 10px 16px;
 
-<div id="toolbar">
+        font-size: 14px;
 
-<button onclick="prevPage()">◀</button>
+        border-radius: 8px;
 
-<button onclick="nextPage()">▶</button>
+        cursor: pointer;
 
-<a href="so_tay_ver1.2.pdf" download>
-<button class="download">⬇ Download</button>
-</a>
+        background: #2563eb;
+        color: white;
 
-<span id="pageNum"></span>
+        display: flex;
+        align-items: center;
+        gap: 6px;
 
-</div>
+        transition: all 0.2s ease;
+      }
 
-<div id="flipbook"></div>
+      button:hover {
+        transform: translateY(-2px);
 
-<script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.35);
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+        background: #1d4ed8;
+      }
 
-<script>
+      .download {
+        background: #16a34a;
+      }
 
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+      .download:hover {
+        background: #15803d;
+      }
 
-const url="so_tay_ver1.2.pdf";
+      /* ===== Page counter ===== */
 
-const container=document.getElementById("flipbook");
+      #pageNum {
+        color: #e5e7eb;
 
-const pageFlip=new St.PageFlip(container,{
-width:550,
-height:733,
+        font-size: 14px;
 
-size:"stretch",
+        padding-left: 6px;
 
-minWidth:315,
-maxWidth:1000,
-minHeight:400,
-maxHeight:1533,
+        opacity: 0.9;
+      }
 
-showCover:true,
-mobileScrollSupport:true
-});
+      /* ===== Flipbook container ===== */
 
-function nextPage(){
-pageFlip.flipNext();
-}
+      #flipbook {
+        width: 92vw;
 
-function prevPage(){
-pageFlip.flipPrev();
-}
+        max-width: 1000px;
 
-pageFlip.on("flip",(e)=>{
-document.getElementById("pageNum").innerText =
-(e.data+1)+" / "+pageFlip.getPageCount();
-});
+        height: 88vh;
 
-pdfjsLib.getDocument(url).promise.then(pdf=>{
+        margin-top: 80px;
 
-let pages=[];
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
 
-for(let i=1;i<=pdf.numPages;i++){
+        border-radius: 6px;
 
-pdf.getPage(i).then(page=>{
+        overflow: hidden;
+      }
 
-const viewport=page.getViewport({scale:2});
+      /* ===== Page ===== */
 
-const canvas=document.createElement("canvas");
-const context=canvas.getContext("2d");
+      .page {
+        background: white;
 
-canvas.width=viewport.width;
-canvas.height=viewport.height;
+        display: flex;
 
-page.render({
-canvasContext:context,
-viewport:viewport
-});
+        justify-content: center;
 
-const div=document.createElement("div");
-div.className="page";
+        align-items: center;
+      }
 
-div.appendChild(canvas);
+      /* ===== Canvas ===== */
 
-pages.push(div);
+      canvas {
+        width: 100%;
 
-if(pages.length===pdf.numPages){
+        height: 100%;
+      }
 
-pageFlip.loadFromHTML(pages);
+      /* ===== Mobile ===== */
 
-}
+      @media (max-width: 600px) {
+        #toolbar {
+          top: 10px;
 
-});
+          padding: 8px 10px;
+        }
 
-}
+        button {
+          padding: 8px 12px;
 
-});
+          font-size: 13px;
+        }
 
-</script>
+        #flipbook {
+          height: 90vh;
+        }
+      }
+    </style>
+  </head>
 
-</body>
+  <body>
+    <!-- ================= Toolbar ================= -->
+
+    <div id="toolbar">
+      <button onclick="prevPage()">◀ Trang trước</button>
+
+      <button onclick="nextPage()">Trang sau ▶</button>
+
+      <a href="so_tay_chuyen_doi_so.pdf" download>
+        <button class="download">⬇ Tải PDF</button>
+      </a>
+
+      <span id="pageNum"></span>
+    </div>
+
+    <!-- ================= Flipbook ================= -->
+
+    <div id="flipbook"></div>
+
+    <!-- ================= Libraries ================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <!-- ================= Script ================= -->
+
+    <script>
+      /* ===== PDF Worker ===== */
+
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+      /* ===== PDF File ===== */
+
+      const url = "so_tay_ver1.2.pdf";
+
+      /* ===== Container ===== */
+
+      const container = document.getElementById("flipbook");
+
+      /* ===== Flipbook ===== */
+
+      const pageFlip = new St.PageFlip(container, {
+        width: 550,
+        height: 733,
+
+        size: "stretch",
+
+        minWidth: 315,
+        maxWidth: 1000,
+
+        minHeight: 400,
+        maxHeight: 1533,
+
+        showCover: true,
+
+        mobileScrollSupport: true,
+      });
+
+      /* ===== Navigation ===== */
+
+      function nextPage() {
+        pageFlip.flipNext();
+      }
+
+      function prevPage() {
+        pageFlip.flipPrev();
+      }
+
+      /* ===== Page Counter ===== */
+
+      pageFlip.on("flip", (e) => {
+        document.getElementById("pageNum").innerText =
+          e.data + 1 + " / " + pageFlip.getPageCount();
+      });
+
+      /* ===== Load PDF ===== */
+
+      pdfjsLib.getDocument(url).promise.then((pdf) => {
+        let pages = [];
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          pdf.getPage(i).then((page) => {
+            const viewport = page.getViewport({ scale: 2 });
+
+            const canvas = document.createElement("canvas");
+
+            const context = canvas.getContext("2d");
+
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            page.render({
+              canvasContext: context,
+              viewport: viewport,
+            });
+
+            const div = document.createElement("div");
+
+            div.className = "page";
+
+            div.appendChild(canvas);
+
+            pages.push(div);
+
+            if (pages.length === pdf.numPages) {
+              pageFlip.loadFromHTML(pages);
+            }
+          });
+        }
+      });
+    </script>
+  </body>
 </html>
