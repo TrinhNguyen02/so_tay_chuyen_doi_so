@@ -21,7 +21,7 @@ align-items:center;
 height:100vh;
 }
 
-/* ===== Toolbar ===== */
+/* Toolbar */
 
 #toolbar{
 position:fixed;
@@ -66,11 +66,11 @@ padding:10px;
 font-size:14px;
 }
 
-/* ===== Flipbook ===== */
+/* Flipbook */
 
 #flipbook{
 width:95vw;
-max-width:1500px;
+max-width:1400px;
 height:85vh;
 margin-top:80px;
 }
@@ -93,8 +93,6 @@ height:100%;
 
 <body>
 
-<!-- ===== Toolbar ===== -->
-
 <div id="toolbar">
 
 <button onclick="prevPage()">◀</button>
@@ -109,55 +107,46 @@ height:100%;
 
 </div>
 
-<!-- ===== Flipbook ===== -->
-
 <div id="flipbook"></div>
 
-<!-- ===== Libraries ===== -->
-
 <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <script>
 
-/* ===== Fix PDF worker error ===== */
-
 pdfjsLib.GlobalWorkerOptions.workerSrc =
 "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
-/* ===== PDF file ===== */
-
 const url="so_tay_ver1.2.pdf";
-
-/* ===== Container ===== */
 
 const container=document.getElementById("flipbook");
 
-/* ===== Detect mobile ===== */
+/* Detect mobile */
 
-const isMobile = window.innerWidth < 768;
+function isMobile(){
+return window.innerWidth < 768;
+}
 
-/* ===== Flipbook ===== */
+/* Create flipbook */
 
 const pageFlip=new St.PageFlip(container,{
+
 width:500,
 height:700,
 
 size:"stretch",
 
-showCover:true,
-
-mobileScrollSupport:true,
+showCover: !isMobile(),
 
 usePortrait:true,
 
-swipeDistance:30,
+mobileScrollSupport:true,
 
-autoSize:true
+maxShadowOpacity:0.3
+
 });
 
-/* ===== Buttons ===== */
+/* Buttons */
 
 function nextPage(){
 pageFlip.flipNext();
@@ -167,14 +156,14 @@ function prevPage(){
 pageFlip.flipPrev();
 }
 
-/* ===== Page counter ===== */
+/* Counter */
 
 pageFlip.on("flip",(e)=>{
 document.getElementById("pageNum").innerText =
 (e.data + 1) + " / " + pageFlip.getPageCount();
 });
 
-/* ===== Load PDF ===== */
+/* Load PDF */
 
 pdfjsLib.getDocument(url).promise.then(pdf=>{
 
@@ -210,13 +199,21 @@ if(pages.length===pdf.numPages){
 
 pageFlip.loadFromHTML(pages);
 
-/* ===== Mobile single page ===== */
+/* Force mode */
 
-if(isMobile){
+setTimeout(()=>{
+
+if(isMobile()){
+
 pageFlip.updateOrientation("portrait");
+
 }else{
+
 pageFlip.updateOrientation("landscape");
+
 }
+
+},200);
 
 }
 
@@ -226,14 +223,18 @@ pageFlip.updateOrientation("landscape");
 
 });
 
-/* ===== Responsive orientation ===== */
+/* Responsive */
 
 window.addEventListener("resize",()=>{
 
-if(window.innerWidth < 768){
+if(isMobile()){
+
 pageFlip.updateOrientation("portrait");
+
 }else{
+
 pageFlip.updateOrientation("landscape");
+
 }
 
 });
