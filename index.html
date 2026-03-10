@@ -16,9 +16,18 @@ height:100vh;
 }
 
 #flipbook{
-width:90vw;
-max-width:900px;
-height:90vh;
+width:900px;
+height:600px;
+}
+.page{
+background:white;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+canvas{
+width:100%;
+height:100%;
 }
 </style>
 
@@ -29,25 +38,58 @@ height:90vh;
 <div id="flipbook"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <script>
 
-const pageFlip = new St.PageFlip(
-document.getElementById("flipbook"),
-{
-width:550,
-height:733,
-size:"stretch",
-minWidth:315,
-maxWidth:1000,
-minHeight:400,
-maxHeight:1533,
-showCover:true,
-mobileScrollSupport:true
-}
-);
+const url = "so_tay_ver1.2.pdf";
 
-pageFlip.loadFromPDF("so_tay_ver1.2.pdf");
+const container = document.getElementById("flipbook");
+
+const pageFlip = new St.PageFlip(container,{
+width:450,
+height:600,
+showCover:true
+});
+
+pdfjsLib.getDocument(url).promise.then(pdf=>{
+
+let pages=[];
+
+for(let i=1;i<=pdf.numPages;i++){
+
+pdf.getPage(i).then(page=>{
+
+const viewport = page.getViewport({scale:1.5});
+
+const canvas = document.createElement("canvas");
+const context = canvas.getContext("2d");
+
+canvas.width = viewport.width;
+canvas.height = viewport.height;
+
+page.render({
+canvasContext:context,
+viewport:viewport
+});
+
+const div=document.createElement("div");
+div.className="page";
+div.appendChild(canvas);
+
+container.appendChild(div);
+
+pages.push(div);
+
+if(pages.length===pdf.numPages){
+pageFlip.loadFromHTML(pages);
+}
+
+});
+
+}
+
+});
 
 </script>
 
