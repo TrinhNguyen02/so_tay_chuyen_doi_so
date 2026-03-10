@@ -3,21 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sách Lật Trang 3D</title>
+<title>Sổ tay chuyển đổi số</title>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip@1.0.9/css/dflip.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip@1.0.9/css/themify-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip/dist/dflip.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip/dist/themify-icons.min.css">
 
 <style>
 body{
-    margin:0;
-    background:#1a1a1a;
+margin:0;
+background:#1a1a1a;
 }
+
 #my-flipbook{
-    width:100%;
-    height:100vh;
+width:100%;
+height:100vh;
 }
 </style>
+
 </head>
 
 <body>
@@ -25,17 +27,16 @@ body{
 <div id="my-flipbook" class="df-book"></div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/dflip@1.0.9/js/dflip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dflip/dist/dflip.min.js"></script>
 
 <script>
 
 $(document).ready(function(){
 
 $("#my-flipbook").flipBook({
-    pdf: "so_tay_ver1.2.pdf",
-    webgl: true,
-    hard: "cover",
-    backgroundColor:"#1a1a1a"
+pdf:"so_tay_ver1.2.pdf",
+webgl:true,
+backgroundColor:"#1a1a1a"
 });
 
 });
