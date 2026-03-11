@@ -20,7 +20,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        height: 100vh;
+        min-height: 100vh;
         overflow: hidden;
       }
 
@@ -103,7 +103,7 @@
 
         max-width: 1000px;
 
-        height: 88vh;
+        height: calc(100svh - 110px);
 
         margin-top: 80px;
 
@@ -165,7 +165,7 @@
       <button onclick="nextPage()">▶</button>
 
       <a href="so_tay_chuyen_doi_so.pdf" download>
-        <button class="download">⬇</button>
+        <button class="download">Download</button>
       </a>
 
       <span id="pageNum"></span>
@@ -271,6 +271,7 @@
     </script>
   </body>
 </html>
+
 
 
 
